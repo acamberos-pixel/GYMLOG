@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Gym3</string>
+    <string name="exercise">Exercise</string>
+    <string name="weight">weight</string>
+    <string name="enter_a_weight">Enter a weight</string>
+    <string name="enter_reps">enter reps</string>
+    <string name="reps">reps</string>
+    <string name="log">log</string>
+</resources>
