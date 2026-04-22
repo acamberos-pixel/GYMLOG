@@ -1,16 +1,18 @@
-package com.example.gym3.Database;
+package com.example.gym3.Database.entities;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import java.time.LocalDate;
-import java.util.*;
-import java.util.Objects;
-import java.time.LocalDate;
+import com.example.gym3.Database.GymLogDatabase;
 
-// gym log entity
+import java.time.LocalDateTime;
+import java.util.Objects;
+
+
+
+
 
 // will replace tablename with diff var later according to professor
-@Entity(tableName = "gymLog")
+@Entity(tableName = GymLogDatabase.GYM_LOG_TABLE)
 public class GymLog {
     @PrimaryKey(autoGenerate = true)
 
@@ -22,7 +24,7 @@ public class GymLog {
 
     private int reps;
 
-    private LocalDate date;
+    private LocalDateTime date;
 
 
     //constructor
@@ -30,7 +32,7 @@ public class GymLog {
         this.exercise = exercise;
         this.weight = weight;
         this.reps = reps;
-        date = LocalDate.now();
+        date = LocalDateTime.now();
     }
 
     //equals and hashcodes
@@ -79,11 +81,11 @@ public class GymLog {
         this.reps = reps;
     }
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 }

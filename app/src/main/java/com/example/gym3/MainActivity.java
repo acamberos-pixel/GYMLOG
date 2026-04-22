@@ -26,7 +26,7 @@ double numWeight = 0.0;
 
 int numReps =0;
 
-private static final String TAG = "DAC GYMLOG";
+public static final String TAG = "DAC GYMLOG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
