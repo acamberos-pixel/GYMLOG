@@ -1,8 +1,8 @@
-package com.example.gym3.Database.entities;
+package com.example.gym3.database.entities;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import com.example.gym3.Database.GymLogDatabase;
+import com.example.gym3.database.GymLogDatabase;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -33,6 +33,20 @@ public class GymLog {
         this.weight = weight;
         this.reps = reps;
         date = LocalDateTime.now();
+    }
+
+    // to string
+
+
+    @Override
+    public String toString() {
+        return
+
+             exercise + '\n' +
+                "weight:" + weight + '\n'+
+                ", reps:" + reps + '\n'+
+                ", date:" + date.toString() + '\n' +
+                "=-=-=-=-=-=-=-=- \n";
     }
 
     //equals and hashcodes

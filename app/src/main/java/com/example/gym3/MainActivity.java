@@ -8,17 +8,20 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.gym3.database.GymLogRepository;
+import com.example.gym3.database.entities.GymLog;
 import com.example.gym3.databinding.ActivityMainBinding;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 
 
 public class MainActivity extends AppCompatActivity {
 
-ActivityMainBinding binding;
+private ActivityMainBinding binding;
 
-
+private GymLogRepository repository;
 
 String mExercise = "";
 
@@ -34,17 +37,22 @@ public static final String TAG = "DAC GYMLOG";
         binding = ActivityMainBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
+        // gives access to database
+        repository = GymLogRepository.getRepository(getApplication());
 
         binding.logDisplayTextView.setMovementMethod(new ScrollingMovementMethod());
 
-
+        updateDisplay();
 
 
         binding.logButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
                 // makes some alert i think
                 getInformationFromDisplay();
+                insertGymLogRecord();
                 updateDisplay();
 
             }
@@ -52,14 +60,37 @@ public static final String TAG = "DAC GYMLOG";
 
     }
 
+
+
+    private void insertGymLogRecord()
+    {
+        if(mExercise.isEmpty())
+        {
+            return;
+        }
+
+        GymLog log = new GymLog(mExercise,numWeight, numReps);
+        repository.insertGymLog(log);
+    }
 // pull value from screen input idk where yet
     private void updateDisplay()
     {
-        String currentInfo = binding.logDisplayTextView.getText().toString();
-        Log.d(TAG,"current info" +currentInfo);
-        String newDisplay = String.format(Locale.US,"Exercise: %s%nWeight:%.2f%nReps:%d%n:=-=-=-%n%s:",mExercise,numWeight,numReps, currentInfo);
+        ArrayList<GymLog> allLogs = repository.getAllLogs();
+        if(allLogs.isEmpty())
+        {
+            binding.logDisplayTextView.setText(R.string.nothing_to_show_hit_the_gym);
+        }
+        StringBuilder sb = new StringBuilder();
+        for(GymLog log : allLogs)
+        {
+            sb.append(log);
 
-        binding.logDisplayTextView.setText(newDisplay);
+        }
+
+
+        binding.logDisplayTextView.setText(sb.toString());
+
+
     }
     private void getInformationFromDisplay()
     {
