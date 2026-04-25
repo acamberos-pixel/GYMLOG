@@ -26,12 +26,14 @@ public class GymLog {
 
     private LocalDateTime date;
 
+    private int userId ;
 
     //constructor
-    public GymLog(String exercise, double weight, int reps) {
+    public GymLog(String exercise, double weight, int reps, int userId) {
         this.exercise = exercise;
         this.weight = weight;
         this.reps = reps;
+        this.userId = userId;
         date = LocalDateTime.now();
     }
 
@@ -50,19 +52,31 @@ public class GymLog {
     }
 
     //equals and hashcodes
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         GymLog gymLog = (GymLog) o;
-        return getId() == gymLog.getId() && Double.compare(getWeight(), gymLog.getWeight()) == 0 && getReps() == gymLog.getReps() && Objects.equals(getExercise(), gymLog.getExercise()) && Objects.equals(getDate(), gymLog.getDate());
+        return getId() == gymLog.getId() && Double.compare(getWeight(), gymLog.getWeight()) == 0 && getReps() == gymLog.getReps() && getUserId() == gymLog.getUserId() && Objects.equals(getExercise(), gymLog.getExercise()) && Objects.equals(getDate(), gymLog.getDate());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getExercise(), getWeight(), getReps(), getDate());
+        return Objects.hash(getId(), getExercise(), getWeight(), getReps(), getDate(), getUserId());
     }
 
+
     //getters and setters
+
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
     public String getExercise() {
         return exercise;
     }

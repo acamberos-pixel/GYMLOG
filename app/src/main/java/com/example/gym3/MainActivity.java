@@ -28,6 +28,8 @@ String mExercise = "";
 double numWeight = 0.0;
 
 int numReps =0;
+// add login info
+int loggedInUserId =-1;
 
 public static final String TAG = "DAC GYMLOG";
 
@@ -57,6 +59,12 @@ public static final String TAG = "DAC GYMLOG";
 
             }
         });
+        binding.exerciseInputEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
     }
 
@@ -69,7 +77,7 @@ public static final String TAG = "DAC GYMLOG";
             return;
         }
 
-        GymLog log = new GymLog(mExercise,numWeight, numReps);
+        GymLog log = new GymLog(mExercise,numWeight, numReps, loggedInUserId);
         repository.insertGymLog(log);
     }
 // pull value from screen input idk where yet
