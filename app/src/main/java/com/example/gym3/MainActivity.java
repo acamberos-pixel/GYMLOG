@@ -1,5 +1,7 @@
 package com.example.gym3;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -19,7 +21,8 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-private ActivityMainBinding binding;
+    private static final String MAIN_ACTIVITY_USER_ID = "com.example.gym3.MAIN_ACTIVITY_USER_ID";
+    private ActivityMainBinding binding;
 
 private GymLogRepository repository;
 
@@ -39,6 +42,14 @@ public static final String TAG = "DAC GYMLOG";
         binding = ActivityMainBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
+
+        loginUser();
+        if(loggedInUserId == -1)
+        {
+            Intent intent = LoginActivity.loginIntentFactory(getApplicationContext());
+            startActivity(intent);
+        }
+
         // gives access to database
         repository = GymLogRepository.getRepository(getApplication());
 
@@ -59,17 +70,29 @@ public static final String TAG = "DAC GYMLOG";
 
             }
         });
-        binding.exerciseInputEditText.setOnClickListener(new View.OnClickListener() {
+        binding.exerciseInputEditText.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
 
             }
         });
 
     }
 
+    private void loginUser() {
 
+        loggedInUserId = getIntent().getIntExtra(MAIN_ACTIVITY_USER_ID,-1);
+        // to do create login method
+    }
 
+static Intent mainActivityIntentFactory(Context context, int userId)
+{
+    Intent intent = new Intent(context, MainActivity.class);
+     intent.putExtra(MAIN_ACTIVITY_USER_ID,userId);
+     return intent;
+}
     private void insertGymLogRecord()
     {
         if(mExercise.isEmpty())

@@ -19,3 +19,4 @@ public interface GymLogDAO {
     @Query("SELECT * FROM " + GymLogDatabase.GYM_LOG_TABLE + " ORDER BY date DESC")
     List<GymLog> getAllRecords();
 }
+
