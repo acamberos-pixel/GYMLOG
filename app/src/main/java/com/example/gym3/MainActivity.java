@@ -93,6 +93,7 @@ public static final String TAG = "DAC GYMLOG";
 
             }
         });
+
         binding.exerciseInputEditText.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -129,7 +130,7 @@ SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferenc
                 }
 
 
-                
+
         });
 
 
