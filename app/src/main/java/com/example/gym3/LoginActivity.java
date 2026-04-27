@@ -1,7 +1,10 @@
 package com.example.gym3;
 
+import static com.example.gym3.MainActivity.SHARED_PREFERENCE_USERID_KEY;
+
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -21,8 +24,6 @@ public class LoginActivity extends AppCompatActivity {
     private GymLogRepository repository;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         binding.loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-        verifyUser();
+                verifyUser();
 
             }
         });
@@ -43,24 +44,25 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void verifyUser()
-    {
+    private void verifyUser() {
         String username = binding.userNameLoginEditText.getText().toString();
-        if(username.isEmpty())
-        {
-         toastMaker("username shouldnt be blank");
+        if (username.isEmpty()) {
+            toastMaker("username shouldnt be blank");
             return;
         }
 
 // makes  live data object and looks at username ?
         LiveData<User> userObserver = repository.getUserByUserName(username);
         userObserver.observe(this, user -> {
-            if (user != null){
+            if (user != null) {
                 String password = binding.passwordLoginEditText.getText().toString();
-                if(password.equals(user.getPassword())){
-                    startActivity(MainActivity.mainActivityIntentFactory(getApplicationContext(),user.getId()));
-                } else
-                {
+                if (password.equals(user.getPassword())) {
+                    SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(MainActivity.SHARED_PREFERENCE_USERID_KEY, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor sharedPrefEditor = sharedPreferences.edit();
+                    sharedPrefEditor.putInt(SHARED_PREFERENCE_USERID_KEY, user.getId());
+                    sharedPrefEditor.apply();
+                    startActivity(MainActivity.mainActivityIntentFactory(getApplicationContext(), user.getId()));
+                } else {
                     toastMaker("invalid password");
                     binding.passwordLoginEditText.setSelection(0);
                 }
@@ -71,16 +73,14 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
-         
     }
 
     private void toastMaker(String message) {
-        Toast.makeText(this,message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
 
-    static Intent loginIntentFactory(Context context)
-    {
+    static Intent loginIntentFactory(Context context) {
         return new Intent(context, LoginActivity.class);
 
     }

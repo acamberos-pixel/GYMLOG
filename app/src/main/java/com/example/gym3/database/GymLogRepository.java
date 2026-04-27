@@ -86,9 +86,9 @@ public class GymLogRepository {
     }
 
 
-    public LiveData<User> getUserByUserName(String username) {
+    public LiveData<User> getUserByUserId(int userId) {
 
-        return userDAO.getUserByUserName(username);
+        return userDAO.getUserByUserId(userId);
     }
 
 }
