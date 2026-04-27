@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.gym3.database.GymLogRepository;
 import com.example.gym3.database.entities.GymLog;
+import com.example.gym3.database.entities.User;
 import com.example.gym3.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
@@ -24,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String MAIN_ACTIVITY_USER_ID = "com.example.gym3.MAIN_ACTIVITY_USER_ID";
     private ActivityMainBinding binding;
 
+
+
 private GymLogRepository repository;
 
 String mExercise = "";
@@ -33,6 +36,8 @@ double numWeight = 0.0;
 int numReps =0;
 // add login info
 int loggedInUserId =-1;
+
+    private User user;
 
 public static final String TAG = "DAC GYMLOG";
 
@@ -44,6 +49,9 @@ public static final String TAG = "DAC GYMLOG";
         setContentView(binding.getRoot());
 
         loginUser();
+
+// tells software to check menu is goood?
+        invalidateOptionsMenu();
         if(loggedInUserId == -1)
         {
             Intent intent = LoginActivity.loginIntentFactory(getApplicationContext());
@@ -75,7 +83,7 @@ public static final String TAG = "DAC GYMLOG";
             @Override
             public void onClick(View view)
             {
-
+                updateDisplay();
             }
         });
 
