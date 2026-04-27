@@ -1,13 +1,20 @@
 package com.example.gym3;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.gym3.database.GymLogRepository;
@@ -91,11 +98,67 @@ public static final String TAG = "DAC GYMLOG";
 
     private void loginUser() {
 
+        user = new User("placeholder", "password");
+
         loggedInUserId = getIntent().getIntExtra(MAIN_ACTIVITY_USER_ID,-1);
         // to do create login method
     }
 
-static Intent mainActivityIntentFactory(Context context, int userId)
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.logout_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.logoutMenuItem);
+        item.setVisible(true);
+        // set user name
+        item.setTitle(user.getUsername());
+
+        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(@NonNull MenuItem item) {
+                // something to make alert dialog i think to interact with
+
+         showLogOutDialog();
+                return false;
+            }
+        });
+        return true;
+    }
+    private void showLogOutDialog()
+    {
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
+        // helps makes sure only one dialog is shown at a time i think
+        final AlertDialog alertDialog = alertBuilder.create();
+
+        alertBuilder.setMessage("Logout?");
+
+        alertBuilder.setPositiveButton("logout", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            logout();
+            }
+        });
+        alertBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                alertDialog.dismiss();
+            }
+        });
+        alertBuilder.create().show();
+    }
+
+    private void logout() {
+        //finish method
+        startActivity(LoginActivity.loginIntentFactory(getApplicationContext()));
+    }
+
+    static Intent mainActivityIntentFactory(Context context, int userId)
 {
     Intent intent = new Intent(context, MainActivity.class);
      intent.putExtra(MAIN_ACTIVITY_USER_ID,userId);
