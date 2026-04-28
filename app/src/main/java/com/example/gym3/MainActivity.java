@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     static final String SHARED_PREFERENCE_USERID_KEY= "com.example.gym3.SHARED_PREFERENCE_USERID_KEY";
     static final String SHARED_PREFERENCE_USERID_VALUE= "com.example.gym3.SHARED_PREFERENCE_USERID_VALUE";
     private static final int LOGGED_OUT = -1;
+    private static final String SAVED_INSTANCE_STATE_USERID_KEY ="com.example.gym3.SAVED_INSTANCE_STATE_USERID_KEY" ;
+
     private ActivityMainBinding binding;
 
 
@@ -105,29 +107,36 @@ public static final String TAG = "DAC GYMLOG";
 
     }
 
-    private void loginUser() {
+    private void loginUser(Bundle savedInstanceState) {
 
 // check intent for logged in user
 SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(SHARED_PREFERENCE_USERID_KEY, Context.MODE_PRIVATE);
     loggedInUserId = sharedPreferences.getInt(SHARED_PREFERENCE_USERID_VALUE, Context.MODE_PRIVATE);
 
-    loggedInUserId = sharedPreferences.getInt(SHARED_PREFERENCE_USERID_VALUE,LOGGED_OUT);
-
-    if (loggedInUserId != LOGGED_OUT)
+    if(sharedPreferences.contains(SHARED_PREFERENCE_USERID_VALUE))
     {
-        return;
+        loggedInUserId = sharedPreferences.getInt(SHARED_PREFERENCE_USERID_VALUE, LOGGED_OUT);
+    }
+    if (loggedInUserId == LOGGED_OUT & savedInstanceState != null && savedInstanceState.containsKey(SAVED_INSTANCE_STATE_USERID_KEY))
+    {
+        loggedInUserId = savedInstanceState.getInt(SAVED_INSTANCE_STATE_USERID_KEY , LOGGED_OUT);
+    }
+    if(loggedInUserId == LOGGED_OUT)
+    {
+        return;;
     }
 
-        loggedInUserId = getIntent().getIntExtra(MAIN_ACTIVITY_USER_ID,LOGGED_OUT);
-        if(loggedInUserId == LOGGED_OUT)
-        {
-            return;
-        }
+
         LiveData<User> userObserver = repository.getUserById(loggedInUserId);
         userObserver.observe(this, user -> {
-            if (user != null) {
+            this.user =user;
+            if (this.user != null) {
                 invalidateOptionsMenu();
                 }
+            else
+            {
+                logout();
+            }
 
 
 
@@ -135,6 +144,19 @@ SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferenc
 
 
     }
+
+
+    @Override
+    protected void onSaveInstanceState (@NonNull Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+        outState.putInt(SAVED_INSTANCE_STATE_USERID_KEY, loggedInUserId);
+        SharedPreferences sharedPreferences = getSharedPreferences().edit();
+        sharedPrefEditor.putInt(MainActivity.SHARED_PREFERENCE_USERID_KEY, loggedInUserId);
+        sharedPrefEditor.apply();
+
+    }
+
 
 
     @Override
@@ -223,7 +245,7 @@ SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferenc
 // pull value from screen input idk where yet
     private void updateDisplay()
     {
-        ArrayList<GymLog> allLogs = repository.getAllLogs();
+        ArrayList<GymLog> allLogs = repository.getAllLogsByUserId(loggedInUserId);
         if(allLogs.isEmpty())
         {
             binding.logDisplayTextView.setText(R.string.nothing_to_show_hit_the_gym);

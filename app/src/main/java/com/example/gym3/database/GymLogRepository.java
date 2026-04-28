@@ -10,6 +10,7 @@ import com.example.gym3.MainActivity;
 import com.example.gym3.database.entities.User;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -91,4 +92,25 @@ public class GymLogRepository {
         return userDAO.getUserByUserId(userId);
     }
 
+    public LiveData<List<GymLog>> getAllLogsByUserId(int userId) {
+
+        Future<ArrayList<GymLog>> future = GymLogDatabase.databaseWriteExecutor.submit(
+                new Callable<ArrayList<GymLog>>() {
+                    @Override
+                    public ArrayList<GymLog> call() throws Exception {
+                        // he has it as logged in user id for some reason
+                        return (ArrayList<GymLog>) gymLogDAO.getRecordableUserId(userId);
+
+                    }
+                }
+        );
+        try {
+            return future.get();
+        } catch (InterruptedException | ExecutionException e) {
+
+            Log.i(MainActivity.TAG, "problem when getting all gymlog in repo");
+        }
+        return null;
+        return gymLogDAO.getAllLogsByUserId( userId);
+    }
 }
