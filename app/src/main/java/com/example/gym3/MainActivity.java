@@ -219,7 +219,7 @@ SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.pr
 
 
 
-        getIntent().putExtra(MAIN_ACTIVITY_USER_ID,LOGGED_OUT);
+        getIntent().putExtra(MAIN_ACTIVITY_USER_ID,loggedInUserId);
         //finish method
         startActivity(LoginActivity.loginIntentFactory(getApplicationContext()));
     }
