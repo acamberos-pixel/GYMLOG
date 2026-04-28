@@ -126,11 +126,11 @@ SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.pr
     }
     if(loggedInUserId == LOGGED_OUT)
     {
-        return;;
+        return;
     }
 
 
-        LiveData<User> userObserver = repository.getUserById(loggedInUserId);
+        LiveData<User> userObserver = repository.getUserByUserId(loggedInUserId);
         userObserver.observe(this, user -> {
             this.user =user;
             if (this.user != null) {
