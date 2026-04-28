@@ -14,19 +14,19 @@ public class GymLogViewModel extends AndroidViewModel {
 
 
     private final GymLogRepository repository;
-    private final LiveData<List<GymLog>> allLogsById;
+//    private final LiveData<List<GymLog>> allLogsById;
 
-    public GymLogViewModel (Application application, int userId)
+    public GymLogViewModel (Application application)
     {
         super(application);
 
         repository = GymLogRepository.getRepository(application);
-        allLogsById = repository.getAllLogsByUserIdLiveData(userId);
+//        allLogsById = repository.getAllLogsByUserIdLiveData(userId);
 
     }
 
-    public LiveData<List<GymLog>> getAllLogsById() {
-        return allLogsById;
+    public LiveData<List<GymLog>> getAllLogsById(int userId) {
+        return repository.getAllLogsByUserIdLiveData(userId);
     }
 
 

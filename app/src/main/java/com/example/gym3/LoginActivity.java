@@ -1,6 +1,6 @@
 package com.example.gym3;
 
-import static com.example.gym3.MainActivity.SHARED_PREFERENCE_USERID_KEY;
+
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +22,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private GymLogRepository repository;
+    public static final String SHARED_PREFERENCE_USERID_KEY = "com.example.gym3.SHARED_PREFERENCE_USERID_KEY";
 
 
     @Override

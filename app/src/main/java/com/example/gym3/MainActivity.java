@@ -18,11 +18,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gym3.database.GymLogRepository;
 import com.example.gym3.database.entities.GymLog;
 import com.example.gym3.database.entities.User;
 import com.example.gym3.databinding.ActivityMainBinding;
+import com.example.gym3.viewHolders.GymLogAdapter;
+import com.example.gym3.viewHolders.GymLogViewModel;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -39,10 +44,10 @@ public class MainActivity extends AppCompatActivity {
     private static final String SAVED_INSTANCE_STATE_USERID_KEY ="com.example.gym3.SAVED_INSTANCE_STATE_USERID_KEY" ;
 
     private ActivityMainBinding binding;
-
-
-
 private GymLogRepository repository;
+private GymLogViewModel gymLogViewModel;
+
+
 
 String mExercise = "";
 
@@ -62,10 +67,23 @@ public static final String TAG = "DAC GYMLOG";
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+
+
+
+        RecyclerView recyclerView = binding.logDisplayRecyclerView;
+        final GymLogAdapter adapter = new GymLogAdapter(new GymLogAdapter.GymLogDiff());
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         // gives access to database
         repository = GymLogRepository.getRepository(getApplication());
 
         loginUser(savedInstanceState);
+        gymLogViewModel = new ViewModelProvider(this).get(GymLogViewModel.class);
+
+        gymLogViewModel.getAllLogsById(loggedInUserId).observe(this, gymLogs -> {
+            adapter.submitList(gymLogs);
+        });
 
 
 
@@ -79,11 +97,11 @@ public static final String TAG = "DAC GYMLOG";
         // will write username ot share pref
         updateSharedPreference();
 
+// to do remove this??????
 
+//        binding.logDisplayTextView.setMovementMethod(new ScrollingMovementMethod());
 
-        binding.logDisplayTextView.setMovementMethod(new ScrollingMovementMethod());
-
-        updateDisplay();
+      //  updateDisplay();
 
 
         binding.logButton.setOnClickListener(new View.OnClickListener() {
@@ -94,19 +112,20 @@ public static final String TAG = "DAC GYMLOG";
                 // makes some alert i think
                 getInformationFromDisplay();
                 insertGymLogRecord();
-                updateDisplay();
+              //  updateDisplay();
 
             }
         });
 
-        binding.exerciseInputEditText.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                updateDisplay();
-            }
-        });
+//        binding.exerciseInputEditText.setOnClickListener(new View.OnClickListener()
+//        {
+//            @Override
+//            public void onClick(View view)
+//            {
+//
+//               updateDisplay();
+//            }
+//        });
 
     }
 
@@ -249,12 +268,14 @@ SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.pr
         repository.insertGymLog(log);
     }
 // pull value from screen input idk where yet
+@Deprecated
+
     private void updateDisplay()
     {
         ArrayList<GymLog> allLogs = repository.getAllLogsByUserId(loggedInUserId);
         if(allLogs.isEmpty())
         {
-            binding.logDisplayTextView.setText(R.string.nothing_to_show_hit_the_gym);
+            //binding.logDisplayTextView.setText(R.string.nothing_to_show_hit_the_gym);
         }
         StringBuilder sb = new StringBuilder();
         for(GymLog log : allLogs)
@@ -264,7 +285,7 @@ SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.pr
         }
 
 
-        binding.logDisplayTextView.setText(sb.toString());
+       // binding.logDisplayTextView.setText(sb.toString());
 
 
     }
