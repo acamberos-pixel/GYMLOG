@@ -1,7 +1,5 @@
 package com.example.gym3;
 
-
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -53,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-// makes  live data object and looks at username ?
+// makes  live data object and looks at username ? before was user = repository.getUserByUserName(username);
         LiveData<User> userObserver = repository.getUserByUserName(username);
         userObserver.observe(this, user -> {
             if (user != null) {

@@ -1,6 +1,6 @@
 package com.example.gym3;
 
-import android.app.DatePickerDialog;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -117,48 +117,39 @@ public static final String TAG = "DAC GYMLOG";
             }
         });
 
-//        binding.exerciseInputEditText.setOnClickListener(new View.OnClickListener()
-//        {
-//            @Override
-//            public void onClick(View view)
-//            {
-//
-//               updateDisplay();
-//            }
-//        });
+
 
     }
 
-    private void loginUser(Bundle savedInstanceState) {
-
-// check intent for logged in user
-SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-//    loggedInUserId = sharedPreferences.getInt(SHARED_PREFERENCE_USERID_VALUE, Context.MODE_PRIVATE);
-
-
-
-        loggedInUserId = sharedPreferences.getInt(getString(R.string.preference_userId_key), LOGGED_OUT);
-
-    if (loggedInUserId == LOGGED_OUT & savedInstanceState != null && savedInstanceState.containsKey(SAVED_INSTANCE_STATE_USERID_KEY))
+    private void loginUser(Bundle savedInstanceState)
     {
-        loggedInUserId = savedInstanceState.getInt(SAVED_INSTANCE_STATE_USERID_KEY , LOGGED_OUT);
-    }
-    if(loggedInUserId == LOGGED_OUT)
-    {
-        return;
-    }
+        loggedInUserId = getIntent().getIntExtra(MAIN_ACTIVITY_USER_ID, LOGGED_OUT);
 
+        if (loggedInUserId == LOGGED_OUT) {
+            SharedPreferences sharedPreferences =
+                    getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+            loggedInUserId = sharedPreferences.getInt(
+                    getString(R.string.preference_userId_key),
+                    LOGGED_OUT
+            );
+        }
+
+        if (loggedInUserId == LOGGED_OUT &&
+                savedInstanceState != null &&
+                savedInstanceState.containsKey(SAVED_INSTANCE_STATE_USERID_KEY)) {
+            loggedInUserId = savedInstanceState.getInt(SAVED_INSTANCE_STATE_USERID_KEY, LOGGED_OUT);
+        }
+
+        if (loggedInUserId == LOGGED_OUT) {
+            return;
+        }
 
         LiveData<User> userObserver = repository.getUserByUserId(loggedInUserId);
         userObserver.observe(this, user -> {
-            this.user =user;
+            this.user = user;
             if (this.user != null) {
                 invalidateOptionsMenu();
-                }
-
-
-
-
+            }
         });
 
 
