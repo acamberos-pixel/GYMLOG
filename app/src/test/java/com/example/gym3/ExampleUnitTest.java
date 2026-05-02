@@ -3,6 +3,8 @@ package com.example.gym3;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import com.example.gym3.database.entities.User;
+
 public class ExampleUnitTest {
 
     @Test
